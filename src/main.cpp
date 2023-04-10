@@ -1,12 +1,4 @@
-#include <Arduino.h>
-#include <mcp2515_can.h>
-#include "freertos/semphr.h"
-
-#include "input_controller/input_controller.hpp"
-#include "joystick_controller/joystick_controller.hpp"
-#include "motor_controller/motor_controller.hpp"
-#include "remote_debug/remote_debug.hpp"
-#include "templates/controller_task.hpp"
+#include "main.hpp"
 
 SemaphoreHandle_t model_changed = xSemaphoreCreateBinary();
 
