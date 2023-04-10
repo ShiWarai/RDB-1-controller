@@ -1,15 +1,18 @@
 #pragma once
 
-#include <vector>
 #include <Arduino.h>
-#include "freertos/semphr.h"
-#include "../model/command.hpp"
-#include "../model/model.hpp"
+#include <vector>
+#include <freertos/semphr.h>
+
+// Bluetooth
 #include <BLEDevice.h>
 #include <BLEServer.h>
 #include <BLEUtils.h>
 #include <BLE2902.h>
-#include "esp_ota_ops.h"
+#include <esp_ota_ops.h>
+
+#include "../model/command.hpp"
+#include "../model/model.hpp"
 #include "callbacks.hpp"
 
 class RemoteDebug

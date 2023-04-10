@@ -2,13 +2,15 @@
 
 #include <Arduino.h>
 #include <mcp2515_can.h>
-#include "freertos/semphr.h"
+#include <freertos/semphr.h>
 
 #include "input_controller/input_controller.hpp"
 #include "joystick_controller/joystick_controller.hpp"
 #include "motor_controller/motor_controller.hpp"
 #include "remote_debug/remote_debug.hpp"
 #include "templates/controller_task.tpp"
+
+#define SERIAL_BAUDRATE 115200
 
 /// @brief Starts all tasks
 void setup();

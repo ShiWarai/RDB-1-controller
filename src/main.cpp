@@ -5,7 +5,7 @@ SemaphoreHandle_t model_changed = xSemaphoreCreateBinary();
 void setup()
 {
 	#ifdef SERIAL_OUTPUT
-		Serial.begin(115200);
+		Serial.begin(SERIAL_BAUDRATE);
 	#endif
 
 	Model::init();
