@@ -4,6 +4,10 @@
 #define SERVICE_UUID                   "e7112e6c-c396-11ed-afa1-0242ac120002"
 #define CHARACTERISTIC_UUID_BEGIN      0xffffff00
 
+#ifndef BLE_PINCODE
+    #define BLE_PINCODE 228228
+#endif
+
 void RemoteDebug::loop()
 {
     this->begin();
@@ -11,7 +15,6 @@ void RemoteDebug::loop()
     while(1) {
         vTaskDelay(1);
     }
-        
 }
 
 bool RemoteDebug::begin() {
@@ -33,8 +36,8 @@ bool RemoteDebug::begin() {
     uint8_t rsp_key = ESP_BLE_ENC_KEY_MASK | ESP_BLE_ID_KEY_MASK;
     uint8_t auth_option = ESP_BLE_ONLY_ACCEPT_SPECIFIED_AUTH_DISABLE;
 
-    uint32_t passkey = 228228;
-    esp_ble_gap_set_security_param(ESP_BLE_SM_SET_STATIC_PASSKEY, &passkey, sizeof(uint32_t));
+    uint32_t* passkey {new uint32_t(BLE_PINCODE)};
+    esp_ble_gap_set_security_param(ESP_BLE_SM_SET_STATIC_PASSKEY, passkey, sizeof(uint32_t));
     pSecurity->setAuthenticationMode(ESP_LE_AUTH_REQ_SC_MITM_BOND);
     pSecurity->setCapability(ESP_IO_CAP_OUT);
     pSecurity->setKeySize(16);
