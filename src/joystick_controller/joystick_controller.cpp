@@ -1,5 +1,15 @@
 #include "joystick_controller.hpp"
 
+bool JoystickController::init()
+{
+    cleanPairedDevices();
+
+    PS4.begin(MAC_PS4_JOYSTICK);
+    PS4.setLed(255, 255, 0);
+
+    return true;
+}
+
 void JoystickController::loop()
 {
     extern SemaphoreHandle_t model_changed;
@@ -19,11 +29,6 @@ void JoystickController::loop()
     bool legsMovingLast = false;
     ClickableButton setOriginButton;
     ClickableButton moveToOriginButton;
-
-    cleanPairedDevices();
-
-    PS4.begin(MAC_PS4_JOYSTICK);
-    PS4.setLed(255, 255, 0);
 
     Serial.println("🔁 Joystick begin");
     while (1) {

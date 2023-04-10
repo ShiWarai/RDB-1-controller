@@ -15,7 +15,9 @@
 class RemoteDebug
 {
 public:
-	RemoteDebug(){};
+	RemoteDebug() {};
+
+	bool init();
 	void loop();
 private:
 	BLEServer* pServer = NULL;
@@ -23,6 +25,4 @@ private:
 	BLECharacteristic* pMotorsOnCharacterestic = NULL;
 	BLECharacteristic* pMotorsCurrentCharacteristic = NULL;
 	BLECharacteristic* pMotorsTargetCharacteristic = NULL;
-
-	bool begin();
 };

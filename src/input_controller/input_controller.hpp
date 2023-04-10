@@ -12,5 +12,7 @@ class InputController
 {
 public:
     InputController() {};
+
+    bool init();
     void loop();
 };

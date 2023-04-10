@@ -10,15 +10,14 @@
 
 void RemoteDebug::loop()
 {
-    this->begin();
-
     Serial.println("🔁 Remote control begin");
+    
     while(1) {
         vTaskDelay(1);
     }
 }
 
-bool RemoteDebug::begin() {
+bool RemoteDebug::init() {
 
     // Create the BLE Device
     BLEDevice::init(BLE_NAME);
