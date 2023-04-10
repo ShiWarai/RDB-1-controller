@@ -1,6 +1,6 @@
-#include "remote_debug.hpp"
+#include "ble_monitor_controller.hpp"
 
-void RemoteDebug::loop()
+void BLEMonitorController::loop()
 {
 	Serial.println("🔁 Remote control begin");
 	
@@ -9,7 +9,7 @@ void RemoteDebug::loop()
 	}
 }
 
-bool RemoteDebug::init() {
+bool BLEMonitorController::init() {
 
 	// Create the BLE Device
 	BLEDevice::init(BLE_NAME);

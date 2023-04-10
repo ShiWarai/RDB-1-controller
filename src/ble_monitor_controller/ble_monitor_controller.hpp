@@ -23,10 +23,10 @@
 #include "../model/model.hpp"
 #include "callbacks.hpp"
 
-class RemoteDebug
+class BLEMonitorController
 {
 public:
-	RemoteDebug() {};
+	BLEMonitorController() {};
 
 	bool init();
 

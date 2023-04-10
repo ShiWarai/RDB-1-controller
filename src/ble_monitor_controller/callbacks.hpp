@@ -15,7 +15,7 @@ public:
 private:
     BLEAdvertising *advertising;
 
-    void on_connect(BLEServer *server)
+    void onConnect(BLEServer *server) override
     {
         #if defined SERIAL_OUTPUT && defined SERIAL_DEBUG
         Serial.println("Connect");
@@ -24,7 +24,7 @@ private:
         return;
     };
 
-    void on_disconnect(BLEServer *server)
+    void onDisconnect(BLEServer *server) override
     {
         this->advertising->start();
 
@@ -38,14 +38,14 @@ private:
 
 class BLEMotorOnCharacteristicCallbacks : public BLECharacteristicCallbacks
 {
-    void on_read(BLECharacteristic *characteristic)
+    void onRead(BLECharacteristic *characteristic) override
     {
         upload_motors_on(characteristic);
 
         return;
     }
 
-    void on_write(BLECharacteristic *characteristic)
+    void onWrite(BLECharacteristic *characteristic) override
     {
         extern SemaphoreHandle_t model_changed;
 
@@ -75,7 +75,7 @@ class BLEMotorOnCharacteristicCallbacks : public BLECharacteristicCallbacks
 
 class BLEReadMotorsCharacteristicCallbacks : public BLECharacteristicCallbacks
 {
-    void on_read(BLECharacteristic *characteristic)
+    void onRead(BLECharacteristic *characteristic) override
     {
         extern SemaphoreHandle_t model_changed;
 
@@ -94,7 +94,7 @@ class BLEReadMotorsCharacteristicCallbacks : public BLECharacteristicCallbacks
 
 class BLEWriteMotorsCharacteristicCallbacks : public BLECharacteristicCallbacks
 {
-    void on_write(BLECharacteristic *characteristic)
+    void onWrite(BLECharacteristic *characteristic) override
     {
         extern SemaphoreHandle_t model_changed;
 

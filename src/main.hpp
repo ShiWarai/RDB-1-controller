@@ -9,7 +9,7 @@
 #include "input_controller/input_controller.hpp"
 #include "joystick_controller/joystick_controller.hpp"
 #include "motor_controller/motor_controller.hpp"
-#include "remote_debug/remote_debug.hpp"
+#include "ble_monitor_controller/ble_monitor_controller.hpp"
 #include "templates/controller_task.tpp"
 
 /// @brief Starts all tasks

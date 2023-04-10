@@ -17,7 +17,7 @@ void setup()
     #if BT_CONTROL_TYPE == 0
     xTaskCreate(controller_task<JoystickController>, "Joystick controller", 10240, NULL, 1, NULL);
     #else
-    xTaskCreate(controller_task<RemoteDebug>, "Remote debug", 4096, NULL, 1, NULL);
+    xTaskCreate(controller_task<BLEMonitorController>, "Remote control via BLE", 4096, NULL, 1, NULL);
     #endif
 
     xTaskCreate(controller_task<MotorController>, "Motor controller", 4096, NULL, 1, NULL);
