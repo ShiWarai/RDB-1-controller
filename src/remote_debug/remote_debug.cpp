@@ -12,6 +12,7 @@ void RemoteDebug::loop()
 {
     this->begin();
 
+    Serial.println("🔁 Remote control begin");
     while(1) {
         vTaskDelay(1);
     }
