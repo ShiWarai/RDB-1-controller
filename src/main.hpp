@@ -12,6 +12,9 @@
 #include "ble_monitor_controller/ble_monitor_controller.hpp"
 #include "templates/controller_task.tpp"
 
+
+SemaphoreHandle_t model_changed = xSemaphoreCreateBinary();
+
 /// @brief Starts all tasks
 void setup();
 

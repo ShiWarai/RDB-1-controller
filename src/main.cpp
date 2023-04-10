@@ -1,7 +1,5 @@
 #include "main.hpp"
 
-SemaphoreHandle_t model_changed = xSemaphoreCreateBinary();
-
 void setup()
 {
     #ifdef SERIAL_OUTPUT

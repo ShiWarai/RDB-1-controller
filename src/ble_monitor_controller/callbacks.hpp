@@ -8,6 +8,8 @@
 
 #include "misc.hpp"
 
+extern SemaphoreHandle_t model_changed;
+
 class BLECustomServerCallbacks : public BLEServerCallbacks
 {
 public:
@@ -47,7 +49,6 @@ class BLEMotorOnCharacteristicCallbacks : public BLECharacteristicCallbacks
 
     void onWrite(BLECharacteristic *characteristic) override
     {
-        extern SemaphoreHandle_t model_changed;
 
         for(uint8_t m = 1; m <= MOTORS_COUNT; m++) {
             if(!Model::motors[m].set_origin) {
@@ -77,7 +78,6 @@ class BLEReadMotorsCharacteristicCallbacks : public BLECharacteristicCallbacks
 {
     void onRead(BLECharacteristic *characteristic) override
     {
-        extern SemaphoreHandle_t model_changed;
 
         for(uint8_t m = 1; m <= MOTORS_COUNT; m++)
             Model::push_command(Command{CHECK, m, 0});
@@ -96,7 +96,6 @@ class BLEWriteMotorsCharacteristicCallbacks : public BLECharacteristicCallbacks
 {
     void onWrite(BLECharacteristic *characteristic) override
     {
-        extern SemaphoreHandle_t model_changed;
 
         load_motors_model(characteristic);
 
