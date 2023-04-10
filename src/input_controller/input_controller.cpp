@@ -1,5 +1,9 @@
 #include "input_controller.hpp"
 
+bool InputController::init()
+{
+    return true;
+}
 
 void InputController::loop()
 {

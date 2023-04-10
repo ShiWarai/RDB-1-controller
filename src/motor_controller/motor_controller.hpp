@@ -17,8 +17,9 @@ class MotorController
 {
 public:
   MotorController() {};
-  void loop();
 
+	bool init();
+  void loop();
 private:
   mcp2515_can can_buses[CAN_COUNT] = { mcp2515_can(4) };
 

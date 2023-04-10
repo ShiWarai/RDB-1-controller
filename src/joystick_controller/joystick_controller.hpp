@@ -13,6 +13,24 @@
 #define MAC_PS4_JOYSTICK "4A:30:10:19:10:1A"
 #define PAIR_MAX_DEVICES 20
 
+class JoystickController
+{
+public:
+    JoystickController() {};
+        
+    bool init();
+    void loop();
+private:
+    // Misc
+    void updateModel(SemaphoreHandle_t model_changed);
+
+    // Bluetooth
+    void cleanPairedDevices();
+    char *bda2str(const uint8_t* bda, char *str, size_t size);
+    bool initBluetooth();
+    bool disableBluetooth();
+};
+
 class ClickableButton {
 private:
     bool __state = false;
@@ -73,20 +91,4 @@ public:
 
         return __state;
 	}
-};
-
-class JoystickController
-{
-public:
-    JoystickController() {};
-    void loop();
-private:
-    // Misc
-    void updateModel(SemaphoreHandle_t model_changed);
-
-    // Bluetooth
-    void cleanPairedDevices();
-    char *bda2str(const uint8_t* bda, char *str, size_t size);
-    bool initBluetooth();
-    bool disableBluetooth();
 };
