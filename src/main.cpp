@@ -38,20 +38,24 @@ void task_remote_debug(void *p)
 
 void setup()
 {
-	#ifdef SERIAL_OUTPUTS
+	#ifdef SERIAL_OUTPUT
 		Serial.begin(115200);
 	#endif
 
 	Model::init();
 
-	xTaskCreate(task_input_controller, "Input controller", 1024, NULL, 1, NULL);
-	delay(5);
+	#if defined SERIAL_OUTPUT && defined SERIAL_INPUT
+		xTaskCreate(task_input_controller, "Input controller", 1024, NULL, 1, NULL);
+		delay(5);
+	#endif
+
 	#if BT_CONTROL_TYPE == 0
 		xTaskCreate(task_joystick_controller, "Joystick controller", 10240, NULL, 1, NULL);
 	#else
 		xTaskCreate(task_remote_debug, "Remote debug", 4096, NULL, 1, NULL);
 	#endif
 	delay(5);
+
 	xTaskCreate(task_motor_controller, "Motor controller", 4096, NULL, 1, NULL);
 	delay(5);
 }
