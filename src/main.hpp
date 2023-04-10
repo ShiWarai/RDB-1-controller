@@ -1,5 +1,7 @@
 #pragma once
 
+#define SERIAL_BAUDRATE 115200
+
 #include <Arduino.h>
 #include <mcp2515_can.h>
 #include <freertos/semphr.h>
@@ -9,8 +11,6 @@
 #include "motor_controller/motor_controller.hpp"
 #include "remote_debug/remote_debug.hpp"
 #include "templates/controller_task.tpp"
-
-#define SERIAL_BAUDRATE 115200
 
 /// @brief Starts all tasks
 void setup();

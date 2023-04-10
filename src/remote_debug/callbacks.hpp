@@ -4,51 +4,58 @@
 #include <BLEServer.h>
 #include <BLEUtils.h>
 #include <BLE2902.h>
-#include "esp_ota_ops.h"
+#include <esp_ota_ops.h>
+
 #include "misc.hpp"
 
 class BLECustomServerCallbacks : public BLEServerCallbacks
 {
 public:
-    BLECustomServerCallbacks(BLEAdvertising *advertising)
-    {
-        this->advertising = advertising;
-    }
-
+    BLECustomServerCallbacks(BLEAdvertising *adv) : advertising {adv} {}
 private:
     BLEAdvertising *advertising;
 
-    void onConnect(BLEServer *pServer)
+    void on_connect(BLEServer *server)
     {
-        // Serial.println("Connect");
+        #if defined SERIAL_OUTPUT && defined SERIAL_DEBUG
+        Serial.println("Connect");
+        #endif
+
         return;
     };
 
-    void onDisconnect(BLEServer *pServer)
+    void on_disconnect(BLEServer *server)
     {
         this->advertising->start();
-        // Serial.println("Disconnect");
+
+        #if defined SERIAL_OUTPUT && defined SERIAL_DEBUG
+        Serial.println("Disconnect");
+        #endif
+
         return;
     }
 };
 
 class BLEMotorOnCharacteristicCallbacks : public BLECharacteristicCallbacks
 {
-    void onRead(BLECharacteristic *pCharacteristic)
+    void on_read(BLECharacteristic *characteristic)
     {
-        uploadMotorsOn(pCharacteristic);
+        upload_motors_on(characteristic);
 
         return;
     }
 
-    void onWrite(BLECharacteristic *pCharacteristic)
+    void on_write(BLECharacteristic *characteristic)
     {
         extern SemaphoreHandle_t model_changed;
 
         for(uint8_t m = 1; m <= MOTORS_COUNT; m++) {
             if(!Model::motors[m].set_origin) {
                 if(Model::motors[m].turn_on) {
+                    #if defined SERIAL_OUTPUT && defined SERIAL_DEBUG
                     Serial.println("You should turn off drivers!");
+                    #endif
+                    
                     return;
                 }
 
@@ -56,7 +63,7 @@ class BLEMotorOnCharacteristicCallbacks : public BLECharacteristicCallbacks
             }
         }
 
-        loadMotorsOn(pCharacteristic);
+        load_motors_on(characteristic);
 
         xSemaphoreGive(model_changed);
         vTaskDelay(32);
@@ -68,7 +75,7 @@ class BLEMotorOnCharacteristicCallbacks : public BLECharacteristicCallbacks
 
 class BLEReadMotorsCharacteristicCallbacks : public BLECharacteristicCallbacks
 {
-    void onRead(BLECharacteristic *pCharacteristic)
+    void on_read(BLECharacteristic *characteristic)
     {
         extern SemaphoreHandle_t model_changed;
 
@@ -79,7 +86,7 @@ class BLEReadMotorsCharacteristicCallbacks : public BLECharacteristicCallbacks
         vTaskDelay(32);
         xSemaphoreTake(model_changed, portMAX_DELAY);
 
-        uploadMotorsModel(pCharacteristic);
+        upload_motors_model(characteristic);
 
         return;
     }
@@ -87,17 +94,17 @@ class BLEReadMotorsCharacteristicCallbacks : public BLECharacteristicCallbacks
 
 class BLEWriteMotorsCharacteristicCallbacks : public BLECharacteristicCallbacks
 {
-    void onWrite(BLECharacteristic *pCharacteristic)
+    void on_write(BLECharacteristic *characteristic)
     {
         extern SemaphoreHandle_t model_changed;
 
-        loadMotorsModel(pCharacteristic);
+        load_motors_model(characteristic);
 
         xSemaphoreGive(model_changed);
         vTaskDelay(32);
         xSemaphoreTake(model_changed, portMAX_DELAY);
 
-        uploadMotorsModel(pCharacteristic);
+        upload_motors_model(characteristic);
 
         return;
     }

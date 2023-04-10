@@ -1,8 +1,8 @@
 #include "misc.hpp"
-const size_t motorsModelVars = MOTORS_COUNT * 5;
-const size_t motorsOnBufferSize = 2;
 
-void convertFloatArrayToUint8Array(float* input, uint8_t* output, size_t size) 
+// Спасибо Bing New за ускорении разработки
+
+void convert_float_array_to_uint8_array(float* input, uint8_t* output, size_t size) 
 {
     // Предполагаем, что размер output равен 4 * size
     for (size_t i = 0; i < size; i++) {
@@ -13,7 +13,7 @@ void convertFloatArrayToUint8Array(float* input, uint8_t* output, size_t size)
     }
 }
 
-void convertUint8ArrayToFloatArray(uint8_t* input, float* output, size_t size) 
+void convert_uint8_array_to_float_array(uint8_t* input, float* output, size_t size) 
 {
     // Предполагаем, что размер input равен 4 * size
     for (size_t i = 0; i < size; i++) {
@@ -24,7 +24,7 @@ void convertUint8ArrayToFloatArray(uint8_t* input, float* output, size_t size)
     }
 }
 
-void convertBoolArrayToUint8Array(bool* boolArray, size_t boolArraySize, uint8_t* uint8_tArray, size_t uint8_tArraySize) {
+void convert_bool_array_to_uint8_array(bool* boolArray, size_t boolArraySize, uint8_t* uint8_tArray, size_t uint8_tArraySize) {
     uint8_t uint8_tValue = 0;
     int bitPosition = 0;
     for (size_t i = 0; i < boolArraySize; i++) {
@@ -44,7 +44,7 @@ void convertBoolArrayToUint8Array(bool* boolArray, size_t boolArraySize, uint8_t
     }
 }
 
-void convertUint8ArrayToBoolArray(uint8_t *uint8_tArray, size_t uint8_tArraySize, bool *boolArray, size_t boolArraySize)
+void convert_uint8_array_to_bool_array(uint8_t *uint8_tArray, size_t uint8_tArraySize, bool *boolArray, size_t boolArraySize)
 {
     uint8_t uint8_tValue;
     int bitPosition = 0;
@@ -68,9 +68,9 @@ void convertUint8ArrayToBoolArray(uint8_t *uint8_tArray, size_t uint8_tArraySize
     }
 }
 
-void uploadMotorsModel(BLECharacteristic* characteristic) 
+void upload_motors_model(BLECharacteristic* characteristic) 
 {
-    float motors_data[motorsModelVars];
+    float motors_data[motors_model_vars_count];
     for(uint8_t m = 1; m <= MOTORS_COUNT; m++) {
         for(uint8_t i = 0; i < 5; i++) {
             switch (i)
@@ -96,19 +96,19 @@ void uploadMotorsModel(BLECharacteristic* characteristic)
         }
     }
 
-    uint8_t buffer[motorsModelVars*4];
-    convertFloatArrayToUint8Array(motors_data, buffer, motorsModelVars);
+    uint8_t buffer[motors_model_vars_count*4];
+    convert_float_array_to_uint8_array(motors_data, buffer, motors_model_vars_count);
     
     characteristic->setValue(buffer, sizeof(buffer));
 
     return;
 }
 
-void loadMotorsModel(BLECharacteristic* characteristic)
+void load_motors_model(BLECharacteristic* characteristic)
 {
-    float motors_data[motorsModelVars];
+    float motors_data[motors_model_vars_count];
 
-    convertUint8ArrayToFloatArray(characteristic->getData(), motors_data, motorsModelVars);
+    convert_uint8_array_to_float_array(characteristic->getData(), motors_data, motors_model_vars_count);
 
     for(uint8_t m = 1; m <= MOTORS_COUNT; m++) {
         for(uint8_t i = 0; i < 5; i++) {
@@ -140,7 +140,7 @@ void loadMotorsModel(BLECharacteristic* characteristic)
     return;
 }
 
-void uploadMotorsOn(BLECharacteristic *characteristic)
+void upload_motors_on(BLECharacteristic *characteristic)
 {
     bool motorsOnStates[MOTORS_COUNT];
 
@@ -148,19 +148,19 @@ void uploadMotorsOn(BLECharacteristic *characteristic)
         motorsOnStates[m-1] = Model::motors[m].turn_on;
     }
 
-    uint8_t buffer[motorsOnBufferSize];
-    convertBoolArrayToUint8Array(motorsOnStates, MOTORS_COUNT, buffer, motorsOnBufferSize);
+    uint8_t buffer[motors_on_buffer_size];
+    convert_bool_array_to_uint8_array(motorsOnStates, MOTORS_COUNT, buffer, motors_on_buffer_size);
 
-    characteristic->setValue(buffer, motorsOnBufferSize);
+    characteristic->setValue(buffer, motors_on_buffer_size);
 
     return;
 }
 
-void loadMotorsOn(BLECharacteristic *characteristic)
+void load_motors_on(BLECharacteristic *characteristic)
 {
     bool motorsOnStates[MOTORS_COUNT];
 
-    convertUint8ArrayToBoolArray(characteristic->getData(), 2, motorsOnStates, MOTORS_COUNT);
+    convert_uint8_array_to_bool_array(characteristic->getData(), 2, motorsOnStates, MOTORS_COUNT);
     
     for(uint8_t m = 1; m <= MOTORS_COUNT; m++) {
         if(motorsOnStates[m-1] && !Model::motors[m].turn_on) {

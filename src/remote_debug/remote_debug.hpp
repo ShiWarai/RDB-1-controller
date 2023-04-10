@@ -1,5 +1,13 @@
 #pragma once
 
+#define BLE_NAME                       "RDB-1"
+#define SERVICE_UUID                   "e7112e6c-c396-11ed-afa1-0242ac120002"
+#define CHARACTERISTICS_UUID_BEGIN      0xffffff00
+
+#ifndef BLE_PINCODE
+	#define BLE_PINCODE 228228
+#endif
+
 #include <Arduino.h>
 #include <vector>
 #include <freertos/semphr.h>
@@ -21,11 +29,13 @@ public:
 	RemoteDebug() {};
 
 	bool init();
+
+	/// @brief Just infinite loop
 	void loop();
 private:
-	BLEServer* pServer = NULL;
-	BLEService* pService = NULL;
-	BLECharacteristic* pMotorsOnCharacterestic = NULL;
-	BLECharacteristic* pMotorsCurrentCharacteristic = NULL;
-	BLECharacteristic* pMotorsTargetCharacteristic = NULL;
+	BLEServer* server = NULL;
+	BLEService* service = NULL;
+	BLECharacteristic* motors_on_characterestic = NULL;
+	BLECharacteristic* motors_current_states_characteristic = NULL;
+	BLECharacteristic* motors_target_states_characteristic = NULL;
 };
