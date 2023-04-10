@@ -20,7 +20,6 @@ void setup()
 
 	#if defined SERIAL_OUTPUT && defined SERIAL_INPUT
 		xTaskCreate(controller_task<InputController>, "Input controller", 1024, NULL, 1, NULL);
-		delay(5);
 	#endif
 
 	#if BT_CONTROL_TYPE == 0
@@ -28,10 +27,8 @@ void setup()
 	#else
 		xTaskCreate(controller_task<RemoteDebug>, "Remote debug", 4096, NULL, 1, NULL);
 	#endif
-	delay(5);
 
 	xTaskCreate(controller_task<MotorController>, "Motor controller", 4096, NULL, 1, NULL);
-	delay(5);
 }
 
 void loop()
