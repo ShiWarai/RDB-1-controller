@@ -6,12 +6,8 @@ enum CommandType
 	MOTOR_OFF,
 	MOTOR_ON,
 	SET_ORIGIN,
-	SET_MIN,
-	SET_MAX,
-	MOVE_MIN,
-	MOVE_MAX,
 	CHECK,
-	CONTROL,
+	RELATIVE_CONTROL,
 };
 
 struct Command

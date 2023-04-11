@@ -101,54 +101,6 @@ void InputController::loop()
             }
             break;
 
-        case 'l':
-            id = (buf[1] - 48) * 10 + (buf[2] - 48);
-
-            if (id <= 0 || id >= 100)
-            {
-                Serial.println("Wrong id!");
-                break;
-            }
-
-            Model::push_command(Command{ SET_MIN, id, 0 });
-            break;
-
-        case 'h':
-            id = (buf[1] - 48) * 10 + (buf[2] - 48);
-
-            if (id <= 0 || id >= 100)
-            {
-                Serial.println("Wrong id!");
-                break;
-            }
-
-            Model::push_command(Command{ SET_MAX, id, 0 });
-            break;
-
-        case 'w':
-            id = (buf[1] - 48) * 10 + (buf[2] - 48);
-
-            if (id <= 0 || id >= 100)
-            {
-                Serial.println("Wrong id!");
-                break;
-            }
-
-            Model::push_command(Command{ MOVE_MAX, id, 0 }); // Replace to Model::push_command(Command{ CONTROL, id, 1 });
-            break;
-
-        case 's':
-            id = (buf[1] - 48) * 10 + (buf[2] - 48);
-
-            if (id <= 0 || id >= 100)
-            {
-                Serial.println("Wrong id!");
-                break;
-            }
-
-            Model::push_command(Command{ MOVE_MIN, id, 0 }); // Replace to Model::push_command(Command{ CONTROL, id, 0 });
-            break;
-
         case 'm':
             id = (buf[1] - 48) * 10 + (buf[2] - 48);
             pos = (buf[4] - 48) * 100 + (buf[5] - 48) * 10 + (buf[6] - 48);
@@ -164,7 +116,7 @@ void InputController::loop()
                 break;
             }
 
-            Model::push_command(Command{ CONTROL, id, float(pos) / 100 });
+            Model::push_command(Command{ RELATIVE_CONTROL, id, float(pos) / 100 });
             break;
         }
 
