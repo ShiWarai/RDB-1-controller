@@ -71,7 +71,6 @@ void InputController::loop()
 					break;
 
 				case 'c': // Check a motor
-				{
 					id = (buffer[1] - 48) * 10 + (buffer[2] - 48);
 
 					if (id <= 0 || id > MOTORS_COUNT)
@@ -83,7 +82,6 @@ void InputController::loop()
 					Model::push_command(Command{CHECK, id});
 
 					break;
-				}
 
 				case 'f': // Zero all motors
 					if (symb_pos > 1)
@@ -104,7 +102,8 @@ void InputController::loop()
 					}
 
 					break;
-				case 'm':
+
+				case 'm': // Control motor
 					id = (buffer[1] - 48) * 10 + (buffer[2] - 48);
 					pos = (buffer[4] - 48) * 100 + (buffer[5] - 48) * 10 + (buffer[6] - 48);
 
@@ -131,7 +130,7 @@ void InputController::loop()
 			symb_pos = 0;
 
 			xSemaphoreGive(model_changed);
-			vTaskDelay(100);
+			vTaskDelay(128);
 			xSemaphoreTake(model_changed, portMAX_DELAY);
 		}
 
