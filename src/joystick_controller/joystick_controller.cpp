@@ -1,4 +1,4 @@
-#include "joystick_controller.hpp"
+#include "joystick_controller/joystick_controller.hpp"
 
 bool JoystickController::init()
 {

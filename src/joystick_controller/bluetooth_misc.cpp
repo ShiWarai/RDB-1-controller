@@ -1,4 +1,4 @@
-#include "bluetooth_misc.hpp"
+#include "joystick_controller/bluetooth_misc.hpp"
 
 bool init_bluetooth()
 {

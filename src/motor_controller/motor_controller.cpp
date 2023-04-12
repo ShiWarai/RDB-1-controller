@@ -1,4 +1,4 @@
-#include "motor_controller.hpp"
+#include "motor_controller/motor_controller.hpp"
 
 mcp2515_can MotorController::can_buses[] = { mcp2515_can(4) };
 

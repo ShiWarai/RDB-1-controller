@@ -1,4 +1,4 @@
-#include "input_controller.hpp"
+#include "input_controller/input_controller.hpp"
 
 bool InputController::init()
 {
