@@ -2,7 +2,7 @@
 
 bool JoystickController::init()
 {
-    cleanPairedDevices();
+    clear_paired_devices();
 
     PS4.begin(MAC_PS4_JOYSTICK);
     PS4.setLed(255, 255, 0);
@@ -45,7 +45,7 @@ void JoystickController::loop()
                     for (short i = 1; i <= MOTORS_COUNT; i++)
                         Model::push_command(Command{ MOTOR_ON, i});
 
-                    this->updateModel(model_changed);
+                    this->update_model(model_changed);
 
                     motorOnLast = true;
                 }
@@ -57,7 +57,7 @@ void JoystickController::loop()
                     for (short i = 1; i <= MOTORS_COUNT; i++)
                         Model::push_command(Command{ MOTOR_OFF, i});
 
-                    this->updateModel(model_changed);
+                    this->update_model(model_changed);
 
                     motorOnLast = false;
                     legsMovingLast = false;
@@ -68,14 +68,14 @@ void JoystickController::loop()
                 for (short i = 1; i <= MOTORS_COUNT; i++)
                     Model::push_command(Command{ MOTOR_NONE, i});
 
-                this->updateModel(model_changed);
+                this->update_model(model_changed);
             }
 
             if (PS4.Square()) {
                 Model::push_command(Command{ MOTOR_ON, 3});
                 Model::push_command(Command{ MOTOR_ON, 9});
 
-                this->updateModel(model_changed);
+                this->update_model(model_changed);
                 vTaskDelay(500);
             }
 
@@ -83,7 +83,7 @@ void JoystickController::loop()
                 for (short i = 1; i <= MOTORS_COUNT; i++)
                     Model::push_command(Command{ SET_ORIGIN, i});
 
-                this->updateModel(model_changed);
+                this->update_model(model_changed);
                 PS4.setLed(255, 0, 0);
             }
 
@@ -160,24 +160,6 @@ void JoystickController::loop()
                 Model::motors[11].set_position_by_procent(p_pos2);
                 Model::motors[12].set_position_by_procent(p_pos3);
 
-                /*
-                Model::motors[1].set_position_by_procent(n_pos1);
-                Model::motors[2].set_position_by_procent(n_pos2);
-                Model::motors[3].set_position_by_procent(n_pos3);
-
-                Model::motors[4].set_position_by_procent(p_pos1);
-                Model::motors[5].set_position_by_procent(p_pos2);
-                Model::motors[6].set_position_by_procent(p_pos3);
-
-                Model::motors[7].set_position_by_procent(p_pos1);
-                Model::motors[8].set_position_by_procent(n_pos2);
-                Model::motors[9].set_position_by_procent(n_pos3);
-
-                Model::motors[10].set_position_by_procent(n_pos1);
-                Model::motors[11].set_position_by_procent(p_pos2);
-                Model::motors[12].set_position_by_procent(p_pos3);
-                */
-
                 PS4.setRumble(20, 0);
 
                 xSemaphoreGive(model_changed);
@@ -194,17 +176,17 @@ void JoystickController::loop()
     }
 }
 
-void JoystickController::updateModel(SemaphoreHandle_t model_changed) {
+void JoystickController::update_model(SemaphoreHandle_t model_changed) {
     xSemaphoreGive(model_changed);
     vTaskDelay(100);
     xSemaphoreTake(model_changed, portMAX_DELAY);
 }
 
-void JoystickController::cleanPairedDevices() {
+void JoystickController::clear_paired_devices() {
     char bda_str[18];
     uint8_t pairedDeviceBtAddr[PAIR_MAX_DEVICES][6];
 
-    initBluetooth();
+    init_bluetooth();
 
     int count = esp_bt_gap_get_bond_device_num(); // Get the numbers of bonded/paired devices in the BT module
 
@@ -216,20 +198,22 @@ void JoystickController::cleanPairedDevices() {
         if(ESP_OK == tError) {
             for(int i = 0; i < count; i++) {
                 esp_err_t tError = esp_bt_gap_remove_bond_device(pairedDeviceBtAddr[i]);
-                if(ESP_OK == tError) {
+
+                #if defined SERIAL_OUTPUT && defined SERIAL_DEBUG
+                if(ESP_OK == tError)
                     Serial.print("Removed bonded device # "); 
-                } else {
+                else
                     Serial.print("Failed to remove bonded device # ");
-                }
                 Serial.println(i);
+                #endif
             }
         }        
     }
 
-    disableBluetooth();
+    disable_bluetooth();
 }
 
-bool JoystickController::initBluetooth()
+bool JoystickController::init_bluetooth()
 {
     if(!btStart())
         return false;
@@ -243,7 +227,7 @@ bool JoystickController::initBluetooth()
     return true;
 }
 
-bool JoystickController::disableBluetooth()
+bool JoystickController::disable_bluetooth()
 {
     if(esp_bluedroid_disable() != ESP_OK)
         return false;
@@ -257,7 +241,7 @@ bool JoystickController::disableBluetooth()
     return true;
 }
 
-char* JoystickController::bda2str(const uint8_t* bda, char *str, size_t size)
+char* JoystickController::bda_to_str(const uint8_t* bda, char* str, size_t size)
 {
   if (bda == NULL || str == NULL || size < 18) {
     return NULL;
