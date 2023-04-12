@@ -7,12 +7,16 @@ enum CommandType
 	MOTOR_ON,
 	SET_ORIGIN,
 	CHECK,
+	#if BT_CONTROL_TYPE == 0 || defined(SERIAL_INPUT)
 	RELATIVE_CONTROL,
+	#endif
 };
 
 struct Command
 {
 	CommandType type;
 	short id;
-	float value; // 0-100% (0.0 - 1.0)
+	#if BT_CONTROL_TYPE == 0 || defined(SERIAL_INPUT)
+	float value; // from 0.0 to 1.0
+	#endif
 };

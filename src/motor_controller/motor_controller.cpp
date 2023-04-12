@@ -7,7 +7,7 @@ bool MotorController::init() {
 	for (int i = 0; i < CAN_BUSES_COUNT; i++)
 	{
 		while (MotorController::can_buses[i].begin(CAN_1000KBPS, MCP_8MHz) != CAN_OK)
-			vTaskDelay(100);
+			vTaskDelay(32);
 	}
 	#endif
 
@@ -40,13 +40,7 @@ void MotorController::loop()
 						continue;
 
 					#if defined SERIAL_OUTPUT && defined SERIAL_DEBUG
-					Serial.printf("Motor %d,", id);
-					Serial.print(" pos: ");
-					Serial.print(Model::motors[id].t_pos);
-					Serial.print(" vel: ");
-					Serial.print(Model::motors[id].t_vel);
-					Serial.print(" trq : ");
-					Serial.println(Model::motors[id].t_trq);
+					Serial.println(Model::motors[id].get_target_stats());
 					#endif
 
 					control_motor(Model::motors[id]);
@@ -62,6 +56,7 @@ void MotorController::loop()
 						t_id = last_command.id;
 						switch (last_command.type)
 						{
+							#if BT_CONTROL_TYPE == 0 || defined(SERIAL_INPUT)
 							case CommandType::RELATIVE_CONTROL:
 								Model::motors[t_id].t_pos = Model::motors[t_id].min_pos + constrain(last_command.value, 0.0, 1.0) * abs(Model::motors[t_id].max_pos - Model::motors[t_id].min_pos);
 
@@ -74,6 +69,7 @@ void MotorController::loop()
 
 								__control_motor(Model::motors[t_id]);
 								break;
+							#endif
 
 							case CommandType::MOTOR_NONE:
 								#ifdef SERIAL_OUTPUT
@@ -124,17 +120,7 @@ void MotorController::loop()
 									//check_motor(&can_buses[Model::motors[t_id].can_id], t_id, &Model::motors[t_id].c_pos, &Model::motors[t_id].c_vel, &Model::motors[t_id].c_trq);
 
 								#if (defined SERIAL_OUTPUT && defined SERIAL_DEBUG) || (defined SERIAL_OUTPUT && defined SERIAL_INPUT)
-								Serial.print("Pos: ");
-								Serial.print(Model::motors[t_id].c_pos);
-								Serial.print(" vel: ");
-								Serial.print(Model::motors[t_id].c_vel);
-								Serial.print(" trq : ");
-								Serial.print(Model::motors[t_id].c_trq);
-								Serial.print(" min : ");
-								Serial.print(Model::motors[t_id].min_pos);
-								Serial.print(" max : ");
-								Serial.println(Model::motors[t_id].max_pos);
-								Serial.println();
+								Serial.println(Model::motors[t_id].get_current_stats());
 								#endif
 								break;
 
@@ -180,7 +166,7 @@ void MotorController::zero_motor(Motor &motor)
 	vTaskDelay(SET_ORIGIN_DELAY);
 	can_unpack(&MotorController::can_buses[motor.can_id], motor.id, &motor.c_pos, &motor.c_vel, &motor.c_trq);
 
-	motor.set_origin = true;
+	motor.set_to_origin = true;
 }
 
 void MotorController::check_motor(Motor &motor)

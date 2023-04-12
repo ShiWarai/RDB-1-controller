@@ -1,5 +1,6 @@
 #include "input_controller.hpp"
 
+
 bool InputController::init()
 {
     return true;
@@ -42,10 +43,10 @@ void InputController::loop()
                     Serial.println("Wrong id!");
                     break;
                 }
-                Model::push_command(Command{ MOTOR_ON, id, 0 });
+                Model::push_command(Command{ MOTOR_ON, id});
             } else {
                 for (unsigned long i = 1; i <= MOTORS_COUNT; i++)
-                    Model::push_command(Command{ MOTOR_ON, id, 0 });
+                    Model::push_command(Command{ MOTOR_ON, id});
             }
             break;
 
@@ -60,11 +61,11 @@ void InputController::loop()
                     break;
                 }
 
-                Model::push_command(Command{ MOTOR_OFF, id, 0 });
+                Model::push_command(Command{ MOTOR_OFF, id});
             }
             else {
                 for (short i = 1; i <= MOTORS_COUNT; i++)
-                    Model::push_command(Command{ MOTOR_OFF, i, 0 });
+                    Model::push_command(Command{ MOTOR_OFF, i});
             }
             break;
 
@@ -78,7 +79,7 @@ void InputController::loop()
                 break;
             }
             
-            Model::push_command(Command{CHECK, id, 0});
+            Model::push_command(Command{CHECK, id});
             break;
         }
 
@@ -93,14 +94,13 @@ void InputController::loop()
                     break;
                 }
 
-                Model::push_command(Command{ SET_ORIGIN, id, 0 });
+                Model::push_command(Command{ SET_ORIGIN, id});
             }
             else {
                 for (short i = 1; i <= MOTORS_COUNT; i++)
-                    Model::push_command(Command{ SET_ORIGIN, i, 0 });
+                    Model::push_command(Command{ SET_ORIGIN, i});
             }
             break;
-
         case 'm':
             id = (buf[1] - 48) * 10 + (buf[2] - 48);
             pos = (buf[4] - 48) * 100 + (buf[5] - 48) * 10 + (buf[6] - 48);
@@ -116,7 +116,9 @@ void InputController::loop()
                 break;
             }
 
+            #if defined SERIAL_OUTPUT && defined SERIAL_INPUT // Cringe
             Model::push_command(Command{ RELATIVE_CONTROL, id, float(pos) / 100 });
+            #endif
             break;
         }
 

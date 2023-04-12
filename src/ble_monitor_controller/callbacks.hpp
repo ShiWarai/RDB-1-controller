@@ -51,7 +51,7 @@ class BLEMotorOnCharacteristicCallbacks : public BLECharacteristicCallbacks
     {
 
         for(uint8_t m = 1; m <= MOTORS_COUNT; m++) {
-            if(!Model::motors[m].set_origin) {
+            if(!Model::motors[m].set_to_origin) {
                 if(Model::motors[m].turn_on) {
                     #if defined SERIAL_OUTPUT && defined SERIAL_DEBUG
                     Serial.println("You should turn off drivers!");
@@ -60,7 +60,7 @@ class BLEMotorOnCharacteristicCallbacks : public BLECharacteristicCallbacks
                     return;
                 }
 
-                Model::push_command(Command{ SET_ORIGIN, m, 0 });
+                Model::push_command(Command{ SET_ORIGIN, m});
             }
         }
 
@@ -80,7 +80,7 @@ class BLEReadMotorsCharacteristicCallbacks : public BLECharacteristicCallbacks
     {
 
         for(uint8_t m = 1; m <= MOTORS_COUNT; m++)
-            Model::push_command(Command{CHECK, m, 0});
+            Model::push_command(Command{CHECK, m});
 
         xSemaphoreGive(model_changed);
         vTaskDelay(32);

@@ -43,7 +43,7 @@ void JoystickController::loop()
                 {
                     PS4.setLed(0, 128, 0);
                     for (short i = 1; i <= MOTORS_COUNT; i++)
-                        Model::push_command(Command{ MOTOR_ON, i, 0 });
+                        Model::push_command(Command{ MOTOR_ON, i});
 
                     this->updateModel(model_changed);
 
@@ -55,7 +55,7 @@ void JoystickController::loop()
                 {
                     PS4.setLed(255, 0, 0);
                     for (short i = 1; i <= MOTORS_COUNT; i++)
-                        Model::push_command(Command{ MOTOR_OFF, i, 0 });
+                        Model::push_command(Command{ MOTOR_OFF, i});
 
                     this->updateModel(model_changed);
 
@@ -66,14 +66,14 @@ void JoystickController::loop()
 
             if (moveToOriginButton.turn(PS4.Circle())) {
                 for (short i = 1; i <= MOTORS_COUNT; i++)
-                    Model::push_command(Command{ MOTOR_NONE, i, 0 });
+                    Model::push_command(Command{ MOTOR_NONE, i});
 
                 this->updateModel(model_changed);
             }
 
             if (PS4.Square()) {
-                Model::push_command(Command{ MOTOR_ON, 3, 0 });
-                Model::push_command(Command{ MOTOR_ON, 9, 0 });
+                Model::push_command(Command{ MOTOR_ON, 3});
+                Model::push_command(Command{ MOTOR_ON, 9});
 
                 this->updateModel(model_changed);
                 vTaskDelay(500);
@@ -81,7 +81,7 @@ void JoystickController::loop()
 
             if (setOriginButton.turn(PS4.Options())) {
                 for (short i = 1; i <= MOTORS_COUNT; i++)
-                    Model::push_command(Command{ SET_ORIGIN, i, 0 });
+                    Model::push_command(Command{ SET_ORIGIN, i});
 
                 this->updateModel(model_changed);
                 PS4.setLed(255, 0, 0);

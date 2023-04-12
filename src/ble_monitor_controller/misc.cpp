@@ -164,9 +164,9 @@ void load_motors_on(BLECharacteristic *characteristic)
     
     for(uint8_t m = 1; m <= MOTORS_COUNT; m++) {
         if(motorsOnStates[m-1] && !Model::motors[m].turn_on) {
-            Model::push_command(Command{ MOTOR_ON, m, 0 });
+            Model::push_command(Command{ MOTOR_ON, m});
         } else if (!motorsOnStates[m-1] && Model::motors[m].turn_on) {
-            Model::push_command(Command{ MOTOR_OFF, m, 0 });
+            Model::push_command(Command{ MOTOR_OFF, m});
         }
     }
     
