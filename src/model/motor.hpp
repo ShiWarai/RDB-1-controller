@@ -12,7 +12,7 @@ public:
 	short can_id {-1};
 
 	bool turn_on = false;
-	bool set_to_origin = false;
+	bool origined = false;
 
 	float t_pos {0};
 	float t_vel {0};

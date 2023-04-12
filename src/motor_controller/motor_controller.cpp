@@ -166,7 +166,7 @@ void MotorController::zero_motor(Motor &motor)
 	vTaskDelay(SET_ORIGIN_DELAY);
 	can_unpack(&MotorController::can_buses[motor.can_id], motor.id, &motor.c_pos, &motor.c_vel, &motor.c_trq);
 
-	motor.set_to_origin = true;
+	motor.origined = true;
 }
 
 void MotorController::check_motor(Motor &motor)

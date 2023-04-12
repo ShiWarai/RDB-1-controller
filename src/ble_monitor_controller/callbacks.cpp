@@ -30,7 +30,7 @@ void BLEMotorOnCharacteristicCallbacks::onRead(BLECharacteristic *characteristic
 void BLEMotorOnCharacteristicCallbacks::onWrite(BLECharacteristic *characteristic)
 {
 	for(uint8_t m = 1; m <= MOTORS_COUNT; m++) {
-		if(!Model::motors[m].set_to_origin) {
+		if(!Model::motors[m].origined) {
 			if(Model::motors[m].turn_on) {
 				#if defined SERIAL_OUTPUT && defined SERIAL_DEBUG
 				Serial.println("You should turn off drivers!");
