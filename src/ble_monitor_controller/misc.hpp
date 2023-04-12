@@ -10,8 +10,8 @@
 #include "../model/model.hpp"
 
 // Calculations
-const size_t motors_model_vars_count = MOTORS_COUNT * 5;
-const size_t motors_on_buffer_size = 2;
+const size_t motors_model_vars_count {MOTORS_COUNT * 5};
+const size_t motors_on_buffer_size {2};
 
 void upload_motors_model(BLECharacteristic* motors_characteristic);
 void load_motors_model(BLECharacteristic* motors_characteristic);
