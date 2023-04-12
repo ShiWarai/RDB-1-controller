@@ -14,11 +14,11 @@
 class JoystickController
 {
 public:
-    JoystickController() {};
-        
-    bool init();
-    void loop();
+	JoystickController() {};
+		
+	bool init();
+	void loop();
 private:
-    // Misc
-    void update_model(SemaphoreHandle_t model_changed);
+	// Misc
+	void update_model(SemaphoreHandle_t model_changed);
 };
