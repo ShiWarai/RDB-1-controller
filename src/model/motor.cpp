@@ -1,5 +1,5 @@
-#include "motor.hpp"
-#include "model.hpp"
+#include "model/motor.hpp"
+#include "model/model.hpp"
 
 void Motor::set_position_by_procent(float proc) {
 	t_pos = min_pos + proc * abs(max_pos - min_pos);

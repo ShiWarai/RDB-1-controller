@@ -1,6 +1,8 @@
 #pragma once
 
 #include <queue>
+#include <Arduino.h>
+#include <freertos/semphr.h>
 
 #include "motor.hpp"
 #include "command.hpp"
@@ -15,6 +17,7 @@ public:
 
 	static bool init();
 	static void push_command(Command command);
+	static void update_model();
 
 	Model() = delete;
 };

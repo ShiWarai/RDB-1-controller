@@ -6,19 +6,16 @@
 #include <Arduino.h>
 #include <PS4Controller.h>
 
-#include "../model/command.hpp"
-#include "../model/model.hpp"
+#include "templates/controller.hpp"
+#include "model/command.hpp"
 #include "buttons.hpp"
 #include "bluetooth_misc.hpp"
 
-class JoystickController
+class JoystickController : public Controller
 {
 public:
 	JoystickController() {};
 		
 	bool init();
 	void loop();
-private:
-	// Misc
-	void update_model(SemaphoreHandle_t model_changed);
 };

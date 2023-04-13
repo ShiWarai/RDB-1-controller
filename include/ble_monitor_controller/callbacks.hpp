@@ -7,8 +7,7 @@
 #include <esp_ota_ops.h>
 
 #include "misc.hpp"
-
-extern SemaphoreHandle_t model_changed;
+#include "templates/controller.hpp"
 
 class BLECustomServerCallbacks : public BLEServerCallbacks
 {

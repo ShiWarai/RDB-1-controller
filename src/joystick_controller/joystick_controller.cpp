@@ -1,4 +1,4 @@
-#include "joystick_controller.hpp"
+#include "joystick_controller/joystick_controller.hpp"
 
 bool JoystickController::init()
 {
@@ -45,7 +45,7 @@ void JoystickController::loop()
 					for (short i = 1; i <= MOTORS_COUNT; i++)
 						Model::push_command(Command{ MOTOR_ON, i});
 
-					this->update_model(model_changed);
+					Model::update_model();
 
 					motorOnLast = true;
 				}
@@ -57,7 +57,7 @@ void JoystickController::loop()
 					for (short i = 1; i <= MOTORS_COUNT; i++)
 						Model::push_command(Command{ MOTOR_OFF, i});
 
-					this->update_model(model_changed);
+					Model::update_model();
 
 					motorOnLast = false;
 					legsMovingLast = false;
@@ -68,14 +68,14 @@ void JoystickController::loop()
 				for (short i = 1; i <= MOTORS_COUNT; i++)
 					Model::push_command(Command{ MOTOR_NONE, i});
 
-				this->update_model(model_changed);
+				Model::update_model();
 			}
 			
 			if (setOriginButton.turn(PS4.Options())) {
 				for (short i = 1; i <= MOTORS_COUNT; i++)
 					Model::push_command(Command{ SET_ORIGIN, i});
 
-				this->update_model(model_changed);
+				Model::update_model();
 				PS4.setLed(255, 0, 0);
 			}
 
@@ -154,9 +154,7 @@ void JoystickController::loop()
 
 				PS4.setRumble(20, 0);
 
-				xSemaphoreGive(model_changed);
-				taskYIELD();
-				xSemaphoreTake(model_changed, portMAX_DELAY);
+				Model::update_model();
 			} else {
 				PS4.setRumble(0, 0);
 			}
@@ -166,10 +164,4 @@ void JoystickController::loop()
 
 		vTaskDelay(32);
 	}
-}
-
-void JoystickController::update_model(SemaphoreHandle_t model_changed) {
-	xSemaphoreGive(model_changed);
-	vTaskDelay(100);
-	xSemaphoreTake(model_changed, portMAX_DELAY);
 }

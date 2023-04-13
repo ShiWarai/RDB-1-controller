@@ -5,12 +5,12 @@
 #include <mcp2515_can.h>
 #include <freertos/semphr.h>
 
+#include "templates/controller.hpp"
 #include "commands.hpp"
 #include "limits.hpp"
-#include "../model/command.hpp"
-#include "../model/model.hpp"
+#include "model/command.hpp"
 
-class MotorController
+class MotorController : public Controller
 {
 public:
 	MotorController() {};

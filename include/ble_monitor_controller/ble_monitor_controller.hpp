@@ -19,23 +19,23 @@
 #include <BLE2902.h>
 #include <esp_ota_ops.h>
 
-#include "../model/command.hpp"
-#include "../model/model.hpp"
+#include "templates/controller.hpp"
+#include "model/command.hpp"
 #include "callbacks.hpp"
 
-class BLEMonitorController
+class BLEMonitorController: public Controller
 {
 public:
 	BLEMonitorController() {};
 
 	bool init();
-
-	/// @brief Just infinite loop
-	void loop();
+	void loop();	// Just infinite loop
 private:
 	BLEServer* server = NULL;
 	BLEService* service = NULL;
 	BLECharacteristic* motors_on_characterestic = NULL;
 	BLECharacteristic* motors_current_states_characteristic = NULL;
 	BLECharacteristic* motors_target_states_characteristic = NULL;
+
+	void update_model(SemaphoreHandle_t model_changed);
 };

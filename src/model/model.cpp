@@ -1,4 +1,4 @@
-#include "model.hpp"
+#include "model/model.hpp"
 
 bool Model::init() {
 
@@ -65,4 +65,12 @@ bool Model::init() {
 void Model::push_command(Command command) {
 	Model::commands.push(command);
 	Model::need_update[0] = true;
+}
+
+void Model::update_model() {
+	extern SemaphoreHandle_t model_changed;
+
+	xSemaphoreGive(model_changed);
+	vTaskDelay(32);
+	xSemaphoreTake(model_changed, portMAX_DELAY);
 }
