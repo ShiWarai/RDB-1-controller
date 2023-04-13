@@ -1,11 +1,11 @@
 #include "input_controller/input_controller.hpp"
 
-bool InputController::Controller::init()
+bool InputController::init()
 {
 	return true;
 }
 
-void InputController::Controller::loop()
+void InputController::loop()
 {
 
 	const int msg_len {32};	// Max message length
@@ -121,6 +121,41 @@ void InputController::Controller::loop()
 					Model::push_command(Command{ RELATIVE_CONTROL, id, float(pos) / 100 });
 					#endif
 
+					break;
+				case 'n': // Control motor
+					if (symb_pos > 1)
+					{
+						id = (buffer[1] - 48) * 10 + (buffer[2] - 48);
+
+						if (id <= 0 || id > MOTORS_COUNT)
+						{
+							Serial.println("Wrong id!");
+							break;
+						}
+
+						Model::motors[id].t_pos = 0;
+						Model::motors[id].kp = 0;
+						Model::motors[id].t_vel = 0;
+						Model::motors[id].kd = 0;
+						Model::motors[id].t_trq = 0;
+
+						Model::need_update[id] = true;
+					}
+					else {
+						for (short i = 1; i <= MOTORS_COUNT; i++) {
+							Model::motors[i].t_pos = 0;
+							Model::motors[i].kp = 0;
+							Model::motors[i].t_vel = 0;
+							Model::motors[i].kd = 0;
+							Model::motors[i].t_trq = 0;
+
+							Model::need_update[i] = true;
+						}
+					}
+					
+					break;
+				
+				default:
 					break;
 			}
 
