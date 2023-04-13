@@ -45,9 +45,7 @@ void BLEMotorOnCharacteristicCallbacks::onWrite(BLECharacteristic *characteristi
 
 	load_motors_on(characteristic);
 
-	xSemaphoreGive(model_changed);
-	vTaskDelay(32);
-	xSemaphoreTake(model_changed, portMAX_DELAY);
+	Model::update_model();
 
 	return;
 }
@@ -57,9 +55,7 @@ void BLEReadMotorsCharacteristicCallbacks::onRead(BLECharacteristic *characteris
 	for(uint8_t m = 1; m <= MOTORS_COUNT; m++)
 		Model::push_command(Command{CHECK, m});
 
-	xSemaphoreGive(model_changed);
-	vTaskDelay(32);
-	xSemaphoreTake(model_changed, portMAX_DELAY);
+	Model::update_model();
 
 	upload_motors_model(characteristic);
 
@@ -70,9 +66,7 @@ void BLEWriteMotorsCharacteristicCallbacks::onWrite(BLECharacteristic *character
 {
 	load_motors_model(characteristic);
 
-	xSemaphoreGive(model_changed);
-	vTaskDelay(32);
-	xSemaphoreTake(model_changed, portMAX_DELAY);
+	Model::update_model();
 
 	upload_motors_model(characteristic);
 

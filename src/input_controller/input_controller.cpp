@@ -1,13 +1,12 @@
 #include "input_controller/input_controller.hpp"
 
-bool InputController::init()
+bool InputController::Controller::init()
 {
 	return true;
 }
 
-void InputController::loop()
+void InputController::Controller::loop()
 {
-	extern SemaphoreHandle_t model_changed;
 
 	const int msg_len {32};	// Max message length
 	char symb;	// Char buffer-var
@@ -129,9 +128,7 @@ void InputController::loop()
 			memset(buffer, 0, sizeof(buffer));
 			symb_pos = 0;
 
-			xSemaphoreGive(model_changed);
-			vTaskDelay(128);
-			xSemaphoreTake(model_changed, portMAX_DELAY);
+			Model::update_model();
 		}
 
 		vTaskDelay(1);

@@ -5,14 +5,16 @@
 #include <freertos/semphr.h>
 #include <freertos/task.h>
 
-#include "../model/command.hpp"
-#include "../model/model.hpp"
+#include "templates/controller.hpp"
+#include "model/command.hpp"
 
-class InputController
+class InputController: public Controller
 {
 public:
 	InputController() {};
 
 	bool init();
 	void loop();
+private:
+	void update_model(SemaphoreHandle_t model_changed);
 };

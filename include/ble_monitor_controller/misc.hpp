@@ -6,8 +6,8 @@
 #include <BLE2902.h>
 #include <cstdint>
 
-#include "../model/command.hpp"
-#include "../model/model.hpp"
+#include "model/command.hpp"
+#include "model/model.hpp"
 
 // Calculations
 const size_t motors_model_vars_count {MOTORS_COUNT * 5};
