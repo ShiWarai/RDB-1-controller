@@ -11,13 +11,11 @@
 #include "buttons.hpp"
 #include "bluetooth_misc.hpp"
 
-class JoystickController: public Controller
+class JoystickController : public Controller
 {
 public:
 	JoystickController() {};
 		
 	bool init();
 	void loop();
-private:
-	void update_model(SemaphoreHandle_t model_changed);
 };

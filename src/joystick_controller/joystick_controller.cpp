@@ -45,7 +45,7 @@ void JoystickController::loop()
 					for (short i = 1; i <= MOTORS_COUNT; i++)
 						Model::push_command(Command{ MOTOR_ON, i});
 
-					update_model(model_changed);
+					Model::update_model();
 
 					motorOnLast = true;
 				}
@@ -57,7 +57,7 @@ void JoystickController::loop()
 					for (short i = 1; i <= MOTORS_COUNT; i++)
 						Model::push_command(Command{ MOTOR_OFF, i});
 
-					update_model(model_changed);
+					Model::update_model();
 
 					motorOnLast = false;
 					legsMovingLast = false;
@@ -68,14 +68,14 @@ void JoystickController::loop()
 				for (short i = 1; i <= MOTORS_COUNT; i++)
 					Model::push_command(Command{ MOTOR_NONE, i});
 
-				update_model(model_changed);
+				Model::update_model();
 			}
 			
 			if (setOriginButton.turn(PS4.Options())) {
 				for (short i = 1; i <= MOTORS_COUNT; i++)
 					Model::push_command(Command{ SET_ORIGIN, i});
 
-				update_model(model_changed);
+				Model::update_model();
 				PS4.setLed(255, 0, 0);
 			}
 

@@ -10,7 +10,7 @@
 #include "limits.hpp"
 #include "model/command.hpp"
 
-class MotorController: public Controller
+class MotorController : public Controller
 {
 public:
 	MotorController() {};
