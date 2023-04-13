@@ -1,178 +1,136 @@
-#include "input_controller.hpp"
+#include "input_controller/input_controller.hpp"
 
-
-void InputController::loop()
+bool InputController::Controller::init()
 {
-    extern SemaphoreHandle_t model_changed;
+	return true;
+}
 
-    const int msg_len = 32; // Max message length
-    char c;                 // Read a char from the Serial
-    char buf[msg_len]{0};   // Collect chars into message
-    uint8_t i = 0;          // Current message chars position
-    short id;
-    unsigned short pos;
+void InputController::Controller::loop()
+{
 
-    Serial.println("🔁 Serial input begin");
-    while (1)
-    {
-        while (Serial.available())
-        {
-        c = Serial.read();
+	const int msg_len {32};	// Max message length
+	char symb;	// Char buffer-var
+	char buffer[msg_len] {0};	// Collect chars into message
+	uint8_t symb_pos {0};	// Current message chars position
 
-        if ((c != '\r') && (i < msg_len - 1))
-        {
-            buf[i] = c;
-            i++;
-            continue;
-        }
+	short id;
+	unsigned short pos;
 
-        switch (buf[0])
-        {
-        case 'a': // Start all motors
-            if (i > 1)
-            {
-                id = (buf[1] - 48) * 10 + (buf[2] - 48);
+	Serial.println("🔁 Serial input begin");
+	while (1)
+	{
+		while (Serial.available())
+		{
+			symb = Serial.read();
+			if ((symb != '\r') && (symb_pos < msg_len - 1))
+			{
+				buffer[symb_pos] = symb;
+				symb_pos++;
+				continue;
+			}
 
-                if (id <= 0 || id > MOTORS_COUNT)
-                {
-                    Serial.println("Wrong id!");
-                    break;
-                }
-                Model::push_command(Command{ MOTOR_ON, id, 0 });
-            } else {
-                for (unsigned long i = 1; i <= MOTORS_COUNT; i++)
-                    Model::push_command(Command{ MOTOR_ON, id, 0 });
-            }
-            break;
+			switch (buffer[0])
+			{
+				case 'a':	// Start all motors
+					if (symb_pos > 1)
+					{
+						id = (buffer[1] - 48) * 10 + (buffer[2] - 48);
 
-        case 'b': // Stop all motors
-            if (i > 1)
-            {
-                id = (buf[1] - 48) * 10 + (buf[2] - 48);
+						if (id <= 0 || id > MOTORS_COUNT)
+						{
+							Serial.println("Wrong id!");
+							break;
+						}
+						Model::push_command(Command{ MOTOR_ON, id});
+					} else {
+						for (short i = 1; i <= MOTORS_COUNT; i++)
+							Model::push_command(Command{ MOTOR_ON, i});
+					}
 
-                if (id <= 0 || id > MOTORS_COUNT)
-                {
-                    Serial.println("Wrong id!");
-                    break;
-                }
+					break;
 
-                Model::push_command(Command{ MOTOR_OFF, id, 0 });
-            }
-            else {
-                for (short i = 1; i <= MOTORS_COUNT; i++)
-                    Model::push_command(Command{ MOTOR_OFF, i, 0 });
-            }
-            break;
+				case 'b': // Stop all motors
+					if (symb_pos > 1)
+					{
+						id = (buffer[1] - 48) * 10 + (buffer[2] - 48);
 
-        case 'c': // Check a motor
-        {
-            id = (buf[1] - 48) * 10 + (buf[2] - 48);
+						if (id <= 0 || id > MOTORS_COUNT)
+						{
+							Serial.println("Wrong id!");
+							break;
+						}
 
-            if (id <= 0 || id > MOTORS_COUNT)
-            {
-                Serial.println("Wrong id!");
-                break;
-            }
-            
-            Model::push_command(Command{CHECK, id, 0});
-            break;
-        }
+						Model::push_command(Command{ MOTOR_OFF, id});
+					}
+					else {
+						for (short i = 1; i <= MOTORS_COUNT; i++)
+							Model::push_command(Command{ MOTOR_OFF, i});
+					}
 
-        case 'f': // Zero all motors
-            if (i > 1)
-            {
-                id = (buf[1] - 48) * 10 + (buf[2] - 48);
+					break;
 
-                if (id <= 0 || id > MOTORS_COUNT)
-                {
-                    Serial.println("Wrong id!");
-                    break;
-                }
+				case 'c': // Check a motor
+					id = (buffer[1] - 48) * 10 + (buffer[2] - 48);
 
-                Model::push_command(Command{ SET_ORIGIN, id, 0 });
-            }
-            else {
-                for (short i = 1; i <= MOTORS_COUNT; i++)
-                    Model::push_command(Command{ SET_ORIGIN, i, 0 });
-            }
-            break;
+					if (id <= 0 || id > MOTORS_COUNT)
+					{
+						Serial.println("Wrong id!");
+						break;
+					}
+					
+					Model::push_command(Command{CHECK, id});
 
-        case 'l':
-            id = (buf[1] - 48) * 10 + (buf[2] - 48);
+					break;
 
-            if (id <= 0 || id >= 100)
-            {
-                Serial.println("Wrong id!");
-                break;
-            }
+				case 'f': // Zero all motors
+					if (symb_pos > 1)
+					{
+						id = (buffer[1] - 48) * 10 + (buffer[2] - 48);
 
-            Model::push_command(Command{ SET_MIN, id, 0 });
-            break;
+						if (id <= 0 || id > MOTORS_COUNT)
+						{
+							Serial.println("Wrong id!");
+							break;
+						}
 
-        case 'h':
-            id = (buf[1] - 48) * 10 + (buf[2] - 48);
+						Model::push_command(Command{ SET_ORIGIN, id});
+					}
+					else {
+						for (short i = 1; i <= MOTORS_COUNT; i++)
+							Model::push_command(Command{ SET_ORIGIN, i});
+					}
 
-            if (id <= 0 || id >= 100)
-            {
-                Serial.println("Wrong id!");
-                break;
-            }
+					break;
 
-            Model::push_command(Command{ SET_MAX, id, 0 });
-            break;
+				case 'm': // Control motor
+					id = (buffer[1] - 48) * 10 + (buffer[2] - 48);
+					pos = (buffer[4] - 48) * 100 + (buffer[5] - 48) * 10 + (buffer[6] - 48);
 
-        case 'w':
-            id = (buf[1] - 48) * 10 + (buf[2] - 48);
+					if (id <= 0 || id >= 100)
+					{
+						Serial.println("Wrong id!");
+						break;
+					}
 
-            if (id <= 0 || id >= 100)
-            {
-                Serial.println("Wrong id!");
-                break;
-            }
+					if (!(pos >= 0 && pos <= 100)) {
+						Serial.println("Wrong position!");
+						break;
+					}
 
-            Model::push_command(Command{ MOVE_MAX, id, 0 }); // Replace to Model::push_command(Command{ CONTROL, id, 1 });
-            break;
+					#if defined SERIAL_OUTPUT && defined SERIAL_INPUT // Cringe
+					Model::push_command(Command{ RELATIVE_CONTROL, id, float(pos) / 100 });
+					#endif
 
-        case 's':
-            id = (buf[1] - 48) * 10 + (buf[2] - 48);
+					break;
+			}
 
-            if (id <= 0 || id >= 100)
-            {
-                Serial.println("Wrong id!");
-                break;
-            }
+			// Reset the message
+			memset(buffer, 0, sizeof(buffer));
+			symb_pos = 0;
 
-            Model::push_command(Command{ MOVE_MIN, id, 0 }); // Replace to Model::push_command(Command{ CONTROL, id, 0 });
-            break;
+			Model::update_model();
+		}
 
-        case 'm':
-            id = (buf[1] - 48) * 10 + (buf[2] - 48);
-            pos = (buf[4] - 48) * 100 + (buf[5] - 48) * 10 + (buf[6] - 48);
-
-            if (id <= 0 || id >= 100)
-            {
-                Serial.println("Wrong id!");
-                break;
-            }
-
-            if (!(pos >= 0 && pos <= 100)) {
-                Serial.println("Wrong position!");
-                break;
-            }
-
-            Model::push_command(Command{ CONTROL, id, float(pos) / 100 });
-            break;
-        }
-
-        // Reset the message
-        memset(buf, 0, sizeof(buf));
-        i = 0;
-
-        xSemaphoreGive(model_changed);
-        vTaskDelay(100);
-        xSemaphoreTake(model_changed, portMAX_DELAY);
-        }
-
-        vTaskDelay(1);
-    }
+		vTaskDelay(1);
+	}
 }
