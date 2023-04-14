@@ -18,6 +18,7 @@ public:
 	static bool init();
 	static void push_command(Command command);
 	static void update_model();
+	static void update_model(TickType_t delay);
 
 	Model() = delete;
 };

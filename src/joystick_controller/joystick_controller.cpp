@@ -12,7 +12,6 @@ bool JoystickController::init()
 
 void JoystickController::loop()
 {
-	extern SemaphoreHandle_t model_changed;
 
 	float pos1, pos2, pos3;
 	float p_pos1, p_pos2, p_pos3;
@@ -104,9 +103,7 @@ void JoystickController::loop()
 					movement_tick = 0;
 				}
 
-				xSemaphoreGive(model_changed);
-				vTaskDelay(500);
-				xSemaphoreTake(model_changed, portMAX_DELAY);
+				Model::update_model(500);
 
 				PS4.setRumble(20, 0);
 				PS4.setLed(124, 0, 255);
